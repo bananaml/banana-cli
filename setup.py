@@ -8,6 +8,7 @@ long_description = (this_directory / "README.md").read_text()
 setup(
     name='banana_cli',
     packages=['banana_cli'],
+    py_modules=["cli"],
     version='0.0.1',
     license='Apache License 2.0',
     # Give a short description about your library
@@ -20,8 +21,13 @@ setup(
     keywords=['Banana server', 'HTTP server', 'Banana', 'Framework'],
     setup_requires=['wheel'],
     install_requires=[
-        "sanic<=22.0.0",
+        "Click",
     ],
+    entry_points={
+        'console_scripts': [
+            'banana = banana_cli:cli',
+        ],
+    },
     classifiers=[
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
         'Development Status :: 3 - Alpha',

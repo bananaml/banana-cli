@@ -1,0 +1,3 @@
+potassium
+torch
+transformers
