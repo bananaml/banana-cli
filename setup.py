@@ -9,7 +9,7 @@ setup(
     name='banana_cli',
     packages=['banana_cli'],
     py_modules=["cli"],
-    version='0.0.2',
+    version='0.0.3',
     license='Apache License 2.0',
     # Give a short description about your library
     description='The Banana CLI helps you build Potassium apps',
@@ -22,6 +22,7 @@ setup(
     setup_requires=['wheel'],
     install_requires=[
         "Click",
+        "gitpython",
     ],
     entry_points={
         'console_scripts': [
