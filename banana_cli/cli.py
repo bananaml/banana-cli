@@ -1,13 +1,40 @@
-import click, os
+import click, os, shutil
 
 @click.group()
 def cli():
     pass
 
+def download_boilerplate():
+    from git import Repo
+    # git clone to tmp dir
+    temp_dir = "tmp"
+    Repo.clone_from("https://github.com/bananaml/banana-cli.git", temp_dir)
+    
+    # move boilerplate to current dir
+    boilerplate_path = os.path.join(temp_dir, "boilerplate/potassium")
+    target_dir = "."
+    files = os.listdir(boilerplate_path)
+    for f in files:
+        src_path = os.path.join(boilerplate_path, f)
+        dst_path = os.path.join(target_dir, f)
+        shutil.move(src_path, dst_path)
+    
+    # remove temp dir
+    shutil.rmtree(temp_dir)
+    
+
 @click.command()
 def init():
-    
-    click.echo('Initialized the project')
+    click.echo('⏰ Downloading boilerplate...')
+    download_boilerplate()
+    click.echo('\n🍌 Project ready to go (hurrah!)')
+    click.echo('\n💨 To run the server manually, run:')
+    click.echo('virtualenv venv')
+    click.echo('. ./venv/bin/activate')
+    click.echo('pip3 install -r requirements.txt')
+    click.echo('python3 app.py')
+    click.echo('\n🔥 To run a dev server with hot-reload, run:')
+    click.echo('banana dev')
 
 def get_app_path(entrypoint):
     # route to cwd if no path specified
