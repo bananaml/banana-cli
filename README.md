@@ -5,15 +5,13 @@ The Banana CLI helps you build Potassium apps
 To download the CLI
 
 ```bash
-pip3 install -u banana-cli
+pip3 install banana-cli
 ```
 
-To initialize a Potassium backend project
+To initialize a Potassium backend app
 
 ```bash
-mkdir my-project
-cd my-project
-banana init
+banana init my-app
 ```
 
 To download dependencies

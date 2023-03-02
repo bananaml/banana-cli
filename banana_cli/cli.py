@@ -1,18 +1,18 @@
 import click, os, shutil
+from .server import run_dev_server
 
 @click.group()
 def cli():
     pass
 
-def download_boilerplate():
+def download_boilerplate(target_dir):
     from git import Repo
     # git clone to tmp dir
-    temp_dir = "tmp"
+    temp_dir = os.path.join(target_dir, "tmp")
     Repo.clone_from("https://github.com/bananaml/banana-cli.git", temp_dir)
     
     # move boilerplate to current dir
     boilerplate_path = os.path.join(temp_dir, "boilerplate/potassium")
-    target_dir = "."
     files = os.listdir(boilerplate_path)
     for f in files:
         src_path = os.path.join(boilerplate_path, f)
@@ -21,15 +21,28 @@ def download_boilerplate():
     
     # remove temp dir
     shutil.rmtree(temp_dir)
-    
+
+def get_target_dir(dir):
+    # route to cwd if no path specified
+    if len(dir) == 0:
+        target_dir = "."
+    else:
+        target_dir = dir[0]
+    # clean to relative path from here
+    target_dir = os.path.relpath(target_dir)
+    if not os.path.exists(target_dir):
+        os.makedirs(target_dir)
+    return target_dir
 
 @click.command()
-def init():
+@click.argument('path', type=click.Path(exists=False, dir_okay=True, file_okay=False), nargs=-1)
+def init(path):
     click.echo('⏰ Downloading boilerplate...')
-    download_boilerplate()
+    target_dir = get_target_dir(path)
+    download_boilerplate(target_dir)
     click.echo('\n🍌 Project ready to go (hurrah!)')
     click.echo('\n💨 To run the server manually, run:')
-    click.echo('virtualenv venv')
+    click.echo('python3 -m venv venv')
     click.echo('. ./venv/bin/activate')
     click.echo('pip3 install -r requirements.txt')
     click.echo('python3 app.py')
@@ -57,7 +70,7 @@ def get_app_path(entrypoint):
 @click.argument('entrypoint', type=click.Path(exists=True), nargs=-1)
 def dev(entrypoint):
     app_path = get_app_path(entrypoint)
-    click.echo('Stub: would start interractive dev server on ' + app_path)
+    run_dev_server(app_path)
 
 @click.command()
 def test():
