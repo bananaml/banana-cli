@@ -23,9 +23,11 @@ Start the jupyter backend:
    
 Run the code watcher:
 (in a new shell)
+
 5. Put that token into watcher.py as jupyter_token
 6. Run watcher.py `python3 watcher.py` to watch app.py for changes
 
 Play with it:
+
 7. Try changing the handler, see what happens!
 8. Try changing the init, see what happens!
