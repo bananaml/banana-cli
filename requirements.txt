@@ -1,0 +1,5 @@
+websocket-client
+torch
+transformers
+termcolor
+requests
