@@ -10,7 +10,7 @@ On startup, and on changes to the init() block, it runs init() and handler().
 
 On changes to the handler() block, it reruns the handler() without needing to wait for another init
 
-It does this by pushing code as logical to a jupyter notebook backend.
+It does this by pushing code in logical chunks to a jupyter notebook backend, to persist memory between refreshes.
 
 ### To use it
 
