@@ -2,6 +2,8 @@
 
 The Banana CLI helps you build Potassium apps
 
+Watch a [demo here](https://www.loom.com/share/e258f228280a4fe9bb4012f57416306e)
+
 ## Hot-Reload Dev Server
 
 The interactive dev server works like a react, next, or nodemon server in that it hot reloads on changes to different parts of your `app.py` file.
