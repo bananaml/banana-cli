@@ -6,7 +6,8 @@ The Banana CLI helps you build Potassium apps
 
 The interactive dev server works like a react, next, or nodemon server in that it hot reloads on changes to different parts of your `app.py` file.
 
-On startup, and on changes to the init() block, it runs init() and handler()
+On startup, and on changes to the init() block, it runs init() and handler().
+
 On changes to the handler() block, it reruns the handler() without needing to wait for another init
 
 It does this by pushing code as logical to a jupyter notebook backend.
