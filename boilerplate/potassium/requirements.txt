@@ -1,3 +1,2 @@
-potassium
 torch
 transformers
