@@ -1,7 +1,8 @@
 ###
-# NOTE: This app.py is for demo purposes only. 
-#       Future versions of the CLI will use the Potassium framework, and actually run a callable http server
-#       This app.py simply prints test cases, for the sake of showing off the hot-reload.
+# NOTE: 
+# This app.py is for demo purposes only. 
+# Future versions of the CLI will use the Potassium framework, and actually run a callable http server
+# This app.py simply prints test cases, for the sake of showing off the hot-reload.
 ###
 
 from transformers import pipeline
@@ -18,18 +19,16 @@ def init():
 
     global cache
     cache = {
-        "model": model,
-        "hello": "world!!!"
+        "model": model
     }
     print("Done")
 
 def handler() -> dict:
     print("Handler...")
-    prompt = "The capital of Iowa is [MASK]."
+    prompt = "The capital of California is [MASK]."
     model = cache.get("model")
     outputs = model(prompt)
-    for out in outputs:
-        print(out["sequence"], out["score"])
+    print(outputs)
 
 
 if __name__ == "__main__":
