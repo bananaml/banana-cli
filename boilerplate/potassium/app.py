@@ -12,10 +12,11 @@ import time
 cache = {}
 
 def init():
+    print("Loading model...")
     device = 0 if torch.cuda.is_available() else -1
     model = pipeline('fill-mask', model='bert-base-uncased', device=device)
 
-    time.sleep(5) # sleep to simulate a hefty model load
+    time.sleep(1) # sleep to simulate a hefty model load
 
     global cache
     cache = {
@@ -24,7 +25,7 @@ def init():
     print("Done")
 
 def handler() -> dict:
-    print("Handler...")
+    print("Running Model...")
     prompt = "The capital of California is [MASK]."
     model = cache.get("model")
     outputs = model(prompt)
