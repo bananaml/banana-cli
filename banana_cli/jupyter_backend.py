@@ -20,7 +20,7 @@ def handle_exit(*args):
     global jupyter_proc
     if jupyter_proc == None:
         quit()
-    print(colored("\n\nCleaning up...", 'green'))
+    print(colored("\n\n------\nCleaning up...", 'green'))
     jupyter_proc.kill()
     print("Done")
     quit()
