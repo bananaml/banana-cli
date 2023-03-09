@@ -2,6 +2,7 @@ import time
 from termcolor import colored
 from .jupyter_backend import create_client, run_code, start_jupyter
 
+# splits a python file into an init section and a handler section
 def split_file(watch):
      # split after init
     with open(watch, "r") as file:
@@ -30,8 +31,8 @@ def split_file(watch):
 
     return init_block, handler_block
 
+# the process
 def run_dev_server(watchfile):
-
 
     # DISCLAIMER: this script:
     # - assumes handler is all code after init block
@@ -54,27 +55,27 @@ def run_dev_server(watchfile):
         b1, b2 = split_file(watchfile)
         if b1 != prev_b1:
             if first_run:
-                print(colored("\n------\nstarting server\n------", 'green'))
+                print(colored("\n------\nStarting server 🍌\n------", 'green'))
                 first_run = False
             else:
-                print(colored("\n------\ninit block changed\nrestarting init + handler\n------", 'green'))
+                print(colored("\n------\nInit block changed\nRestarting init + handler\n------", 'green'))
             prev_b1 = b1
             prev_b2 = b2
 
-            print(colored("\ninit output:\n------", 'yellow'))
+            print(colored("Init output:\n------", 'yellow'))
             to_run = b1 + "\ninit()"
             run_code(ws, to_run)
 
-            print(colored("\nhandler output:\n------", 'yellow'))
+            print(colored("\nHandler output:\n------", 'yellow'))
             to_run = b2 + "\nhandler()"
             run_code(ws, to_run)
             continue
 
         if b2 != prev_b2:
-            print(colored("\n------\nhandler block changed\nupdating handler\n------", 'green'))
+            print(colored("\n------\nHandler block changed\nUpdating handler\n------", 'green'))
             prev_b2 = b2
 
-            print(colored("\nhandler output:\n------", 'yellow'))
+            print(colored("Handler output:\n------", 'yellow'))
             to_run = b2 + "\nhandler()"
             run_code(ws, to_run)
         

@@ -9,9 +9,9 @@ import time
 from termcolor import colored
 from websocket import create_connection
 
-# cleanup block to shut down jupyter background process
+# Graceful shutdown, to prevent memory leaking a bunch of jupyter kernal procesees onto the users machine,
 jupyter_proc = None
-already_handled = False
+already_handled = False # because handle_exit can double-fire
 def handle_exit(*args):
     global already_handled
     if already_handled:
@@ -20,20 +20,68 @@ def handle_exit(*args):
     global jupyter_proc
     if jupyter_proc == None:
         quit()
-    print("\nCleaning up...")
+    print(colored("\n\nCleaning up...", 'green'))
     jupyter_proc.kill()
     print("Done")
     quit()
-
 atexit.register(handle_exit)
 signal.signal(signal.SIGTERM, handle_exit)
 signal.signal(signal.SIGINT, handle_exit)
 
+# Runs `jupyter notebook` as a background subprocess, and handles any errors in that
+def start_jupyter():
+    bashCommand = "jupyter notebook --no-browser"
+    try:
+        # run as subprocess. Jupyter funnels output into both stdout and stderr for some reason so we pipe them both to process.stdout
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    except FileNotFoundError:
+        print("Jupyter Notebook not found in your environment.\n\nSee https://jupyter.org/install for installation instructions\nAfter installation, be sure it's runnable with `jupyter notebook`")
+        quit()
+    
+    log_dump = ""
+    port = None
+    token = None
+    # startup should take less than a second so capture start time for timeout error
+    start = time.time()
+
+    for line in process.stdout:
+        # if we're still reading from stdout after 10s, that's unexpected
+        if time.time() - start > 10:
+            raise Exception("Error: timed out starting jupyter subprocess. Make sure you have jupyter installed, and that it's runnable with `jupyter notebook`")
+        
+        line = line.decode()
+        # add line into log_dump in case errors arise
+        log_dump += line
+
+        # search for the server url
+        x = re.search("http://localhost:", line)
+        if x == None:
+            # keep reading from stream if we haven't seen a server url
+            continue
+        # parse out port and token
+        port_parse_start = x.string.find("http://localhost:") + 17
+        port_parse_end = x.string.find("/?token=")
+        port = x.string[port_parse_start:port_parse_end].strip()
+        token_parse_start = port_parse_end + 8
+        token = x.string[token_parse_start:].strip()
+        break
+
+    # if we hit EOF without recognizing a port or token, that means an error occured
+    if port == None or token == None:
+        print(f"Error: running {bashCommand}, here's a log dump")
+        print(colored(log_dump, "red"))
+        raise Exception("Error in starting jupyter subprocess, view logs above")
+    
+    # save that process to the global var for graceful shutdown
+    global jupyter_proc
+    jupyter_proc = process
+
+    return port, token
+
+# create a websocket client connection to the juptyer backend
 def create_client(port: str, token: str):
-    # The token is written on stdout when you start the notebook
     base = f'http://localhost:{port}'
     headers = {'Authorization': 'Token '+token}
-
     url = base + '/api/kernels'
     response = requests.post(url,headers=headers)
     kernel = json.loads(response.text)
@@ -44,6 +92,7 @@ def create_client(port: str, token: str):
     
     return ws
 
+# creates the expected request structure to the jupyter backend
 def form_request(code: str):
     msg_type = 'execute_request'
     content = { 'code' : code, 'silent':False }
@@ -58,6 +107,7 @@ def form_request(code: str):
         'content': content }
     return json.dumps(msg)
 
+# Excecutes arbitrary code as a single jupyter cell in the jupter backend
 def run_code(ws, code: str):
     ws.send(form_request(code))
 
@@ -82,41 +132,6 @@ def run_code(ws, code: str):
   
         if msg_type == "execute_reply":
             break
-
-def start_jupyter():
-    # currently assumes no errors at all, just parses token from output
-    bashCommand = "jupyter notebook --no-browser"
-    try:
-        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    except FileNotFoundError:
-        print("Jupyter Notebook not found in your environment.\n\nSee https://jupyter.org/install for installation instructions\nAfter installation, be sure it's runnable with `jupyter notebook`")
-        quit()
-    log_dump = ""
-    port = None
-    token = None
-    start = time.time()
-    for line in process.stdout:
-        if time.time() - start > 10:
-            raise Exception("Error: timed out starting jupyter subprocess. Make sure you have jupyter installed, and that it's runnable with `jupyter notebook`")
-        line = line.decode()
-        log_dump += line
-        x = re.search("http://localhost:", line)
-        if x == None:
-            continue
-        port_parse_start = x.string.find("http://localhost:") + 17
-        port_parse_end = x.string.find("/?token=")
-        port = x.string[port_parse_start:port_parse_end].strip()
-        token_parse_start = port_parse_end + 8
-        token = x.string[token_parse_start:].strip()
-        break
-    if port == None or token == None:
-        print(f"Error: running {bashCommand}, here's a log dump")
-        print(colored(log_dump, "red"))
-        raise Exception("Error in starting jupyter subprocess, view logs above")
-    global jupyter_proc
-    jupyter_proc = process
-
-    return port, token
   
 
 # Run this file directly for testing
