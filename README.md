@@ -24,7 +24,7 @@ cd my-app
 ```bash
 banana dev
 ```
-The dev server expects you to have an environment that runs a jupyter notebook with `jupyter notebook`
+The dev server expects you to already have jupyter notebook installed, runnable with `jupyter notebook`
 
 ## Hot-Reload Dev Server
 
