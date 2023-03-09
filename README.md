@@ -12,7 +12,7 @@ This version includes:
 
 1. Install the CLI with pip
 ```bash
-pip3 install banana-cli==0.0.4
+pip3 install banana-cli==0.0.5
 ```
 
 2. Create a new project directory with 
@@ -24,19 +24,7 @@ cd my-app
 ```bash
 banana dev
 ```
-
-For the current release you'll need to manually start a jupyter notebook backend. The `banana dev` command will prompt you to input the auth token from that backend so the CLI can connect to it. This will be automatic in the future.
-
-4. Start the jupyter backend (in a separate terminal session):
-
-From within your `my-app` project directory:
-```bash
-python3 -m venv venv
-. ./venv/bin/activate
-pip3 install -r requirements.txt
-jupyter notebook
-```
-5. Copy the "token" string in the URL displayed in the terminal output. It should look like `115850cc76a1dd8b2880ccfa458f6f4d269876724eef92bc` 
+The dev server expects you to have an environment that runs a jupyter notebook with `jupyter notebook`
 
 ## Hot-Reload Dev Server
 
@@ -48,7 +36,6 @@ The handler() function is ran on every change to handler(), without needing to w
 
 It does this by pushing code in logical chunks to a jupyter notebook backend, to persist memory between reloads.
 
-   
 ## Play with it:
 
 6. Try changing the handler, see what happens!
