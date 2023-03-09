@@ -1,6 +1,6 @@
 import time
 from termcolor import colored
-from .jupyter_backend import create_client, run_code
+from .jupyter_backend import create_client, run_code, start_jupyter
 
 def split_file(watch):
      # split after init
@@ -38,34 +38,34 @@ def run_dev_server(watchfile):
     # - does not detect changes in imported files
     # - probably has a bunch of bugs
 
-    # Run `juptyer notebook` in this venv, and copy the token string from the URL it gives you
-    print("The Banana CLI uses jupyter on the backend to execute hot-reloading.")
-    print("For this V0, you need to start that server yourself.\n")
-    print("In a separate terminal session:")
-    print("1. cd into this repo")
-    print("2. create a python virtual env with `python3 -m venv venv`")
-    print("3. activate into that env with `. ./venv/bin/activate`")
-    print("4. install dependencies with `pip3 install -r requirements.txt`")
-    print("5. run a jupyter notebook backend with `jupyter notebook`. Install if needed.")
-    print("6. copy the auth token from the juptyer notebook terminal output, from the ?token=xyz field in the URLs. Paste it below:\n")
-    jupyter_token = input("Your jupyter token: ")
-
-    ws = create_client(jupyter_token)
+    print(colored("Starting Jupyter backend...", 'green'), end="\r")
+    port, token = start_jupyter()
+    print(colored("Starting Jupyter backend...  ✅", 'green'))
+    print(colored("Connecting to kernal...", "green"), end="\r")
+    ws = create_client(port, token)
+    print(colored("Connecting to kernal...      ✅", "green"))
+    print(colored("Verifying healthy runtime...", "green"), end=" ")
+    run_code(ws, "print('✅')")
 
     prev_b1 = 0
     prev_b2 = 0
+    first_run = True
     while True:
         b1, b2 = split_file(watchfile)
         if b1 != prev_b1:
-            print(colored("\n------\ninit block changed\nrestarting init + handler\n------", 'green'))
+            if first_run:
+                print(colored("\n------\nstarting server\n------", 'green'))
+                first_run = False
+            else:
+                print(colored("\n------\ninit block changed\nrestarting init + handler\n------", 'green'))
             prev_b1 = b1
             prev_b2 = b2
 
-            print(colored("init output:", 'yellow'))
+            print(colored("\ninit output:\n------", 'yellow'))
             to_run = b1 + "\ninit()"
             run_code(ws, to_run)
 
-            print(colored("handler output:", 'yellow'))
+            print(colored("\nhandler output:\n------", 'yellow'))
             to_run = b2 + "\nhandler()"
             run_code(ws, to_run)
             continue
@@ -74,7 +74,7 @@ def run_dev_server(watchfile):
             print(colored("\n------\nhandler block changed\nupdating handler\n------", 'green'))
             prev_b2 = b2
 
-            print(colored("handler output:", 'yellow'))
+            print(colored("\nhandler output:\n------", 'yellow'))
             to_run = b2 + "\nhandler()"
             run_code(ws, to_run)
         
