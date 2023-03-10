@@ -6,6 +6,8 @@ This version includes:
 - `banana init` to create a project with boilerplate
 - `banana dev` to run a dev server with hot-reload when app.py changes
 
+It's currently written in Python, we plan to port to Rust. [Why?](https://giphy.com/gifs/aFbTasXn1GINgiEbzr)
+
 ---
 
 ## To use it
