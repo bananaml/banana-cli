@@ -9,7 +9,7 @@ setup(
     name='banana_cli',
     packages=['banana_cli'],
     py_modules=["cli"],
-    version='0.0.5',
+    version='0.0.6',
     license='Apache License 2.0',
     # Give a short description about your library
     description='The Banana CLI helps you build Potassium apps',

@@ -12,7 +12,7 @@ This version includes:
 
 1. Install the CLI with pip
 ```bash
-pip3 install banana-cli==0.0.5
+pip3 install banana-cli==0.0.6
 ```
 
 2. Create a new project directory with 

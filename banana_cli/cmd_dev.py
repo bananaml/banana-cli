@@ -42,9 +42,9 @@ def run_dev_server(watchfile):
     print(colored("Starting Jupyter backend...", 'green'), end="\r")
     port, token = start_jupyter()
     print(colored("Starting Jupyter backend...  ✅", 'green'))
-    print(colored("Connecting to kernal...", "green"), end="\r")
+    print(colored("Connecting to kernel...", "green"), end="\r")
     ws = create_client(port, token)
-    print(colored("Connecting to kernal...      ✅", "green"))
+    print(colored("Connecting to kernel...      ✅", "green"))
     print(colored("Verifying healthy runtime...", "green"), end=" ")
     run_code(ws, "print('✅')")
 

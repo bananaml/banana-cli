@@ -9,7 +9,7 @@ import time
 from termcolor import colored
 from websocket import create_connection
 
-# Graceful shutdown, to prevent memory leaking a bunch of jupyter kernal procesees onto the users machine,
+# Graceful shutdown, to prevent memory leaking a bunch of jupyter kernel procesees onto the users machine,
 jupyter_proc = None
 already_handled = False # because handle_exit can double-fire
 def handle_exit(*args):
@@ -35,7 +35,8 @@ def start_jupyter():
         # run as subprocess. Jupyter funnels output into both stdout and stderr for some reason so we pipe them both to process.stdout
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     except FileNotFoundError:
-        print("Jupyter Notebook not found in your environment.\n\nSee https://jupyter.org/install for installation instructions\nAfter installation, be sure it's runnable with `jupyter notebook`")
+        print(colored("Jupyter Notebook not found in your environment.", "red"))
+        print("\nSee https://jupyter.org/install for installation instructions\nAfter installation, be sure it's runnable with `jupyter notebook`")
         quit()
     
     log_dump = ""
