@@ -53,7 +53,7 @@ def get_app_path(entrypoint):
 
 # Get the relative path to the venv site-packages
 # Return None if not exists
-def get_venv_path(app_path, venv_name = "venv"):
+def get_site_packages(app_path, venv_name = "venv"):
     parent_dir = os.path.split(os.path.abspath(app_path))[0]
     venv_dir = os.path.join(parent_dir, venv_name)
     if not os.path.exists(venv_dir) or not os.path.isdir(venv_dir):
@@ -63,13 +63,10 @@ def get_venv_path(app_path, venv_name = "venv"):
     lib_path = os.path.join(venv_dir, "lib")
     if not os.path.exists(lib_path):
         return None
-    
     python_versions = os.listdir(lib_path)
-    
-    # There should only be one version. If more, there's some trickery afoot
+    # There should only be one python version. If more, there's some trickery afoot.
     if len(python_versions) != 1:
         return None
-
     site_packages_dir = os.path.relpath(os.path.join(lib_path, python_versions[0], "site-packages"))
     if not os.path.exists(site_packages_dir) or not os.path.isdir(site_packages_dir):
         return None 

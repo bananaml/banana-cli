@@ -3,7 +3,7 @@ import click
 
 # local imports
 from .cmd_dev import run_dev_server
-from .utils import get_target_dir, get_app_path, get_venv_path, download_boilerplate
+from .utils import get_target_dir, get_app_path, get_site_packages, download_boilerplate
 
 @click.group()
 def cli():
@@ -24,8 +24,8 @@ def init(path):
 @click.argument('entrypoint', type=click.Path(exists=True), nargs=-1)
 def dev(venv, entrypoint):
     app_path = get_app_path(entrypoint)
-    venv_packages = get_venv_path(app_path, venv_name = venv)
-    run_dev_server(app_path, venv_packages)
+    site_packages = get_site_packages(app_path, venv_name = venv)
+    run_dev_server(app_path, site_packages)
 
 cli.add_command(init)
 cli.add_command(dev)

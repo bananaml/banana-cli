@@ -33,17 +33,17 @@ def split_file(watch):
 
     return init_block, handler_block
 
-# the process
-def run_dev_server(app_path, venv_packages):
-    
-    # run session backend in specified virtualenv
-    run_cell("import sys")
-    run_cell(f"sys.path.append('{venv_packages}')")
+# runs a hot-reload dev server
+def run_dev_server(app_path, site_packages):
 
     # DISCLAIMER: this script:
     # - assumes handler is all code after init block
     # - does not detect changes in imported files
     # - probably has a bunch of bugs
+
+    # run session backend in specified virtualenv
+    run_cell("import sys")
+    run_cell(f"sys.path.append('{site_packages}')")
 
     prev_b1 = 0
     prev_b2 = 0
