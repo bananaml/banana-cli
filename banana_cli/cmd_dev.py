@@ -41,9 +41,10 @@ def run_dev_server(app_path, site_packages):
     # - does not detect changes in imported files
     # - probably has a bunch of bugs
 
-    # run session backend in specified virtualenv
-    run_cell("import sys")
-    run_cell(f"sys.path.append('{site_packages}')")
+    # run session backend in virtualenv, or in global env if venv not found
+    if site_packages != None:
+        run_cell("import sys")
+        run_cell(f"sys.path.append('{site_packages}')")
 
     prev_b1 = 0
     prev_b2 = 0
