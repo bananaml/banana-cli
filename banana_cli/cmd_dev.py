@@ -55,7 +55,7 @@ def run_dev_server(app_path, site_packages):
         b1, b2 = split_file(app_path)
         if b1 != prev_b1:
             if first_run:
-                print(colored("\n------\nStarting server 🍌\n------", 'green'))
+                print(colored("------\nStarting server 🍌\n------", 'green'))
                 first_run = False
             else:
                 print(colored("\n------\nInit block changed\nRestarting init + handler\n------", 'green'))

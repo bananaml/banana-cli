@@ -1,6 +1,8 @@
 import os
+import venv
 import shutil
-import click
+import subprocess
+import sys
 
 # Uses git to clone the potassium boilerplate from /boilerplate/potassium in this git repo
 def download_boilerplate(target_dir):
@@ -72,3 +74,12 @@ def get_site_packages(app_path, venv_name = "venv"):
         return None 
     
     return site_packages_dir
+
+# create a venv
+def create_venv(venv_path):
+    venv.create(venv_path, with_pip=True)
+
+# install requirements.txt into venv
+def install_venv(req_path, venv_path):
+    python_interpreter = os.path.join(venv_path, "bin", "python3")
+    subprocess.check_call([python_interpreter, "-m", "pip", "install", "-r", req_path])
