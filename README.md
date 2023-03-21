@@ -26,7 +26,6 @@ cd my-app
 ```bash
 banana dev
 ```
-The dev server expects you to already have jupyter notebook installed, runnable with `jupyter notebook`
 
 ## Hot-Reload Dev Server
 
@@ -35,8 +34,6 @@ The interactive dev server works like a react, next, or nodemon server: it selec
 The init() function is ran on startup and for every change to init().
 
 The handler() function is ran on every change to handler(), without needing to wait for a long init()
-
-It does this by pushing code in logical chunks to a jupyter notebook backend, to persist memory between reloads.
 
 ## Play with it:
 
