@@ -45,6 +45,8 @@ def run_dev_server(app_path, site_packages):
     if site_packages != None:
         run_cell("import sys")
         run_cell(f"sys.path.append('{site_packages}')")
+    else:
+        print(colored("Warning: no virtual environment found; running in global environment", 'yellow'))
 
     prev_b1 = 0
     prev_b2 = 0
