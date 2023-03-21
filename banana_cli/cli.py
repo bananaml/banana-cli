@@ -1,9 +1,10 @@
 # click is our CLI library
 import click
+import os
 
 # local imports
 from .cmd_dev import run_dev_server
-from .utils import get_target_dir, get_app_path, get_site_packages, download_boilerplate
+from .utils import get_target_dir, get_app_path, get_site_packages, download_boilerplate, create_venv, install_venv
 
 @click.group()
 def cli():
@@ -11,13 +12,30 @@ def cli():
 
 @click.command()
 @click.argument('path', type=click.Path(exists=False, dir_okay=True, file_okay=False), nargs=-1)
-def init(path):
+@click.option('--no-venv', is_flag=True, required=False, help="Disable automatic use of a virtual environment")
+def init(path, no_venv):
     click.echo('⏰ Downloading boilerplate...')
     target_dir = get_target_dir(path)
     download_boilerplate(target_dir)
+    if not no_venv:
+        click.echo('🌎 Creating virtual environment...')
+        venv_path = os.path.join(target_dir, "venv")
+        create_venv(venv_path)
+        click.echo('📦 Downloading packages...')
+        req_path = os.path.join(target_dir, "requirements.txt")
+        install_venv(req_path, venv_path)
     click.echo('\n🍌 Project ready to go (hurrah!)')
     click.echo('\n🔥 To run a dev server with hot-reload, run:')
     click.echo('banana dev')
+
+@click.command()
+@click.option('--venv', default="venv", required=False, type=str, help="The path of the virtual environment to install into. Defaults to venv.")
+def install(venv):
+    if not os.path.exists(venv):
+        click.echo('🌎 Creating virtual environment...')
+        create_venv(venv)
+    click.echo('📦 Downloading packages...')
+    install_venv("requirements.txt", venv)
 
 @click.command()
 @click.option('--venv', default="venv", required=False, type=str, help="The path of the virtual environment to run in. Defaults to venv.")
@@ -28,6 +46,7 @@ def dev(venv, entrypoint):
     run_dev_server(app_path, site_packages)
 
 cli.add_command(init)
+cli.add_command(install)
 cli.add_command(dev)
 
 if __name__ == "__main__":
