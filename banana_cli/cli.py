@@ -12,7 +12,7 @@ def cli():
 
 @click.command()
 @click.argument('path', type=click.Path(exists=False, dir_okay=True, file_okay=False), nargs=-1)
-@click.option('--no-venv', default=False, required=False, type=bool, help="Disable automatic use of a virtual environment")
+@click.option('--no-venv', is_flag=True, required=False, help="Disable automatic use of a virtual environment")
 def init(path, no_venv):
     click.echo('⏰ Downloading boilerplate...')
     target_dir = get_target_dir(path)
