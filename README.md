@@ -15,7 +15,7 @@ This is a v0 release using SemVer; it is not stable and the interface can break 
 
 1. Install the CLI with pip
 ```bash
-pip3 install banana-cli==0.0.7
+pip3 install banana-cli==0.0.8
 ```
 
 2. Create a new project directory with 
