@@ -10,6 +10,8 @@ This version includes:
 It's currently written in Python, we plan to port to Rust for stable release. [Why Rust?](https://giphy.com/gifs/aFbTasXn1GINgiEbzr)
 
 ---
+This is a v0 release using SemVer; it is not stable and the interface can break at any time.
+---
 
 ## To use it
 
