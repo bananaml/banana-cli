@@ -1,20 +1,23 @@
 # banana-cli
-v0; work in progress; not stable release
 
 The goal of the Banana CLI is to bring an npm-like experience to ML development loops. 
+
 This version includes:
 - `banana init` to create a project with boilerplate
-- `banana dev` to run a dev server with hot-reload when app.py changes
+- `banana install` to install packages from the requirements.txt
+- `banana dev` to run a dev server with hot-reload
 
 It's currently written in Python, we plan to port to Rust for stable release. [Why Rust?](https://giphy.com/gifs/aFbTasXn1GINgiEbzr)
 
+---
+This is a v0 release using SemVer; it is not stable and the interface can break at any time.
 ---
 
 ## To use it
 
 1. Install the CLI with pip
 ```bash
-pip3 install banana-cli==0.0.6
+pip3 install banana-cli==0.0.7
 ```
 
 2. Create a new project directory with 
@@ -22,11 +25,10 @@ pip3 install banana-cli==0.0.6
 banana init my-app
 cd my-app
 ```
-3. Start the hot reloading dev server
+1. Start the dev server
 ```bash
 banana dev
 ```
-The dev server expects you to already have jupyter notebook installed, runnable with `jupyter notebook`
 
 ## Hot-Reload Dev Server
 
@@ -35,8 +37,6 @@ The interactive dev server works like a react, next, or nodemon server: it selec
 The init() function is ran on startup and for every change to init().
 
 The handler() function is ran on every change to handler(), without needing to wait for a long init()
-
-It does this by pushing code in logical chunks to a jupyter notebook backend, to persist memory between reloads.
 
 ## Play with it:
 
