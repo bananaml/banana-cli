@@ -7,8 +7,6 @@ This version includes:
 - `banana install` to install packages from the requirements.txt
 - `banana dev` to run a dev server with hot-reload
 
-It's currently written in Python, we plan to port to Rust for stable release. [Why Rust?](https://giphy.com/gifs/aFbTasXn1GINgiEbzr)
-
 ---
 This is a v0 release using SemVer; it is not stable and the interface can break at any time.
 ---
@@ -42,3 +40,13 @@ The handler() function is ran on every change to handler(), without needing to w
 
 4. Try changing the handler, see what happens!
 5. Try changing the init, see what happens!
+
+## Future Development:
+- Rewrite boilerplate and dev server to run [Potassium](https://github.com/bananaml/potassium) rather than the current demo code
+- Lock in a stable interface
+- Add the following commands
+  - `banana build` -> verify production build
+  - `banana test` -> unit test against local test cases
+  - `banana deploy` -> manually deploy from CLI
+  - `banana deploy --canary --ttl=10` -> run a temporary deployment to Banana's cluster for on-GPU testin
+- Port to Rust. [Why Rust?](https://giphy.com/gifs/aFbTasXn1GINgiEbzr)
