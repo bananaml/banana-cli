@@ -25,7 +25,7 @@ pip3 install banana-cli==0.0.7
 banana init my-app
 cd my-app
 ```
-1. Start the dev server
+3. Start the dev server
 ```bash
 banana dev
 ```
@@ -40,5 +40,5 @@ The handler() function is ran on every change to handler(), without needing to w
 
 ## Play with it:
 
-6. Try changing the handler, see what happens!
-7. Try changing the init, see what happens!
+4. Try changing the handler, see what happens!
+5. Try changing the init, see what happens!
