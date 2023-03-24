@@ -13,7 +13,8 @@ def cli():
 @click.command()
 @click.argument('path', type=click.Path(exists=False, dir_okay=True, file_okay=False), nargs=-1)
 @click.option('--no-venv', is_flag=True, required=False, help="Disable automatic use of a virtual environment")
-def init(path, no_venv):
+@click.option('--no-install', is_flag=True, required=False, help="Disable automatic install of requirements.txt")
+def init(path, no_venv, no_install):
     click.echo('⏰ Downloading boilerplate...')
     target_dir = get_target_dir(path)
     download_boilerplate(target_dir)
@@ -23,10 +24,14 @@ def init(path, no_venv):
         create_venv(venv_path)
         click.echo('📦 Downloading packages...')
         req_path = os.path.join(target_dir, "requirements.txt")
-        install_venv(req_path, venv_path)
+
+        if not no_install:
+            install_venv(req_path, venv_path)
+
     click.echo('\n🍌 Project ready to go (hurrah!)')
     click.echo('\n🔥 To run a dev server with hot-reload, run:')
-    click.echo(f'cd {path[0]}')
+    if target_dir != ".":
+        click.echo(f'cd {target_dir}')
     click.echo('banana dev')
 
 @click.command()
