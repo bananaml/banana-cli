@@ -17,6 +17,10 @@ def cli():
 def init(path, no_venv, no_install):
     click.echo('⏰ Downloading boilerplate...')
     target_dir = get_target_dir(path)
+    if target_dir == ".":
+        # verify they're not installing into an existing dir
+        if len(os.listdir(target_dir)) > 0:
+            click.confirm("This is not an empty directory, and the install may overwrite existing files.\nDo you want to proceed?", abort=True)
     download_boilerplate(target_dir)
     if not no_venv:
         click.echo('🌎 Creating virtual environment...')
