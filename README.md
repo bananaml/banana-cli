@@ -7,6 +7,8 @@ This version includes:
 - `banana install` to install packages from the requirements.txt
 - `banana dev` to run a dev server with hot-reload
 
+[Here's a demo.](https://www.loom.com/share/86d4e7b0801549b9ab2f7a1acce772aa)
+
 ---
 This is a v0 release using SemVer; it is not stable and the interface can break at any time.
 ---
