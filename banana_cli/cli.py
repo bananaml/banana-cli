@@ -22,16 +22,18 @@ def init(path, no_venv, no_install):
         click.echo('🌎 Creating virtual environment...')
         venv_path = os.path.join(target_dir, "venv")
         create_venv(venv_path)
-        click.echo('📦 Downloading packages...')
-        req_path = os.path.join(target_dir, "requirements.txt")
 
         if not no_install:
+            click.echo('📦 Downloading packages...')
+            req_path = os.path.join(target_dir, "requirements.txt")
             install_venv(req_path, venv_path)
 
     click.echo('\n🍌 Project ready to go (hurrah!)')
     click.echo('\n🔥 To run a dev server with hot-reload, run:')
     if target_dir != ".":
         click.echo(f'cd {target_dir}')
+    if no_install:
+        click.echo(f'banana install')
     click.echo('banana dev')
 
 @click.command()
