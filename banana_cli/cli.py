@@ -26,6 +26,7 @@ def init(path, no_venv):
         install_venv(req_path, venv_path)
     click.echo('\n🍌 Project ready to go (hurrah!)')
     click.echo('\n🔥 To run a dev server with hot-reload, run:')
+    click.echo(f'cd {path[0]}')
     click.echo('banana dev')
 
 @click.command()
