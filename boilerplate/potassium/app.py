@@ -1,37 +1,33 @@
-###
-# NOTE: 
-# This app.py is for demo purposes only. 
-# Future versions of the CLI will use the Potassium framework, and actually run a callable http server
-# This app.py simply prints test cases, for the sake of showing off the hot-reload.
-###
+from potassium import Potassium, Request, Response
 
 from transformers import pipeline
 import torch
-import time
 
-cache = {}
+app = Potassium("my_app")
 
+# @app.init runs at startup, and loads models into the app's context
+@app.init
 def init():
-    print("Loading model...")
     device = 0 if torch.cuda.is_available() else -1
     model = pipeline('fill-mask', model='bert-base-uncased', device=device)
-
-    time.sleep(1) # sleep to simulate a hefty model load
-
-    global cache
-    cache = {
+   
+    context = {
         "model": model
     }
-    print("Done")
 
-def handler() -> dict:
-    print("Running Model...")
-    prompt = "The capital of California is [MASK]."
-    model = cache.get("model")
+    return context
+
+# @app.handler runs for every call
+@app.handler()
+def handler(context: dict, request: Request) -> Response:
+    prompt = request.json.get("prompt")
+    model = context.get("model")
     outputs = model(prompt)
-    print(outputs)
 
+    return Response(
+        json = {"outputs": outputs[0]}, 
+        status=200
+    )
 
 if __name__ == "__main__":
-    init()
-    handler()
+    app.serve()

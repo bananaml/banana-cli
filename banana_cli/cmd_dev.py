@@ -3,6 +3,7 @@ from termcolor import colored
 import os
 # from .jupyter_backend import create_client, run_code, start_jupyter
 from .process.run import run_cell
+from .process import cells
 
 # splits a python file into an init section and a handler section
 def split_file(watch):
@@ -33,8 +34,49 @@ def split_file(watch):
 
     return init_block, handler_block
 
+def start_all(b1, b2, first_run = False):
+    if first_run:
+        print(colored("------\nStarting server 🍌", 'yellow'))
+    else:
+        print(colored("------\nRestarting server 🍌", 'yellow'))
+    # define init and handlers
+    run_cell(b1)
+    run_cell(b2)
+    # run init
+    print(colored("Running init()", 'yellow'))
+    run_cell(cells.run_init)
+    # start server
+    run_cell(cells.start_server)
+    print(colored("Serving on http://localhost:8000\n------", 'green'))
+
+def reload_all(b1, b2):
+    # stop server then restart
+    run_cell(cells.stop_server)
+    start_all(b1, b2)
+             
+def reload_handlers(b2):
+    print(colored("------\nHot reloading 🔥", 'yellow'))
+    # stop server
+    run_cell(cells.stop_server)
+     # redefine handlers
+    run_cell(b2)
+    # start server
+    run_cell(cells.start_server)
+    print(colored("Reloaded\n------", 'green'))
+
 # runs a hot-reload dev server
 def run_dev_server(app_path, site_packages):
+
+    import signal
+    import sys
+
+    # shut down thread if one is runnning
+    def sigint_handler(signal, frame):
+        print(colored("\nStopping server", 'yellow'))
+        run_cell(cells.stop_server_quietly)
+        print(colored("Bye! 👋\n------", 'green'))
+        sys.exit(0)
+    signal.signal(signal.SIGINT, sigint_handler)
 
     # DISCLAIMER: this script:
     # - assumes handler is all code after init block
@@ -48,38 +90,29 @@ def run_dev_server(app_path, site_packages):
     else:
         print(colored("Warning: no virtual environment found; running in global environment", 'yellow'))
 
+    # imports and classes needed for hot reload serving
+    run_cell(cells.prepare_env)
+
     prev_b1 = 0
     prev_b2 = 0
     first_run = True
     while True:
         b1, b2 = split_file(app_path)
-        if b1 != prev_b1:
-            if first_run:
-                print(colored("------\nStarting server 🍌\n------", 'green'))
-                first_run = False
-            else:
-                print(colored("\n------\nInit block changed\nRestarting init + handler\n------", 'green'))
+        if first_run:
+            start_all(b1, b2, first_run)
+            first_run = False
             prev_b1 = b1
             prev_b2 = b2
+            continue
 
-            print(colored("Init output:\n------", 'yellow'))
-            to_run = b1 + "\ninit()"
-            # run_code(ws, to_run)
-            run_cell(to_run)
-
-            print(colored("\nHandler output:\n------", 'yellow'))
-            to_run = b2 + "\nhandler()"
-            # run_code(ws, to_run)
-            run_cell(to_run)
+        if b1 != prev_b1:
+            reload_all(b1, b2)
+            prev_b1 = b1
+            prev_b2 = b2
             continue
 
         if b2 != prev_b2:
-            print(colored("\n------\nHandler block changed\nUpdating handler\n------", 'green'))
+            reload_handlers(b2)
             prev_b2 = b2
-
-            print(colored("Handler output:\n------", 'yellow'))
-            to_run = b2 + "\nhandler()"
-            # run_code(ws, to_run)
-            run_cell(to_run)
         
         time.sleep(0.1)
