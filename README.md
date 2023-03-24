@@ -15,7 +15,7 @@ This is a v0 release using SemVer; it is not stable and the interface can break 
 
 1. Install the CLI with pip
 ```bash
-pip3 install banana-cli==0.0.8
+pip3 install banana-cli==0.0.9
 ```
 
 2. Create a new project directory with 
@@ -27,6 +27,11 @@ cd my-app
 ```bash
 banana dev
 ```
+
+4. Call your API (from a separate terminal)
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"prompt": "Hello I am a [MASK] model."}' http://localhost:8000/
+``` 
 
 ## Hot-Reload Dev Server
 
