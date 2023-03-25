@@ -35,6 +35,7 @@ def split_file(watch):
     return init_block, handler_block
 
 replacements = {}
+# populate_replacements gathers all patterns seen for CUDA usage in pytorch and provides a replacement value for use in str.replace()
 def populate_replacements():
     replacements = {
         ".cuda()": "", 
@@ -65,7 +66,7 @@ def populate_replacements():
 
     return replacements
 
-
+# strip_cuda_calls replaces calls to cuda with calls to cpu
 def strip_cuda_calls(block: str):
     # from https://pytorch.org/docs/stable/notes/cuda.html
 
