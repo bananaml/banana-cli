@@ -2,7 +2,7 @@ import time
 from termcolor import colored
 import os
 # from .jupyter_backend import create_client, run_code, start_jupyter
-from .process.run import run_cell
+from .process.run import run_cell, check_for_gpu
 from .process import cells
 
 # splits a python file into an init section and a handler section
@@ -33,6 +33,56 @@ def split_file(watch):
     handler_block = "".join([line for line in handler_block_lines if line != "\n"])
 
     return init_block, handler_block
+
+replacements = {}
+def populate_replacements():
+    replacements = {
+        ".cuda()": "", 
+        "device='cuda'": "device='cpu'",
+        "device = 'cuda'": "device = 'cpu'",
+        'device="cuda"': 'device="cpu"',
+        'device = "cuda"': 'device = "cpu"'
+    }
+
+    slots = [""] # the all gpus slot
+    # we only support for up to 8 GPUs, and do not support specific numbered gpus such as `cuda:1,3`
+    for i in range(8):
+        slots.append(f":{i}")
+
+    # add named slots
+    for slot in slots:
+        replacements[f".to('cuda{slot}')"] = ""
+        replacements[f'.to("cuda{slot}")'] = ""
+
+        # devices that may be later referenced
+        replacements[f"torch.device('cuda{slot}')"] = "torch.device('cpu')"
+        replacements[f'torch.device("cuda{slot}")'] = "torch.device('cpu')"
+
+    # device indices
+    for i in range(8):
+        replacements[f"device={i}"] = "device=-1"
+        replacements[f"device = {i}"] = "device = -1"
+
+    return replacements
+
+
+def strip_cuda_calls(block: str):
+    # from https://pytorch.org/docs/stable/notes/cuda.html
+
+    global replacements
+    if len(replacements) == 0:
+        # populate it
+        replacements = populate_replacements()
+
+    
+    old_block = block
+    changed = False
+    for substr, new in replacements.items():
+        block = block.replace(substr, new)
+    if block != old_block:
+        changed = True
+
+    return block, changed
 
 def start_all(b1, b2, first_run = False):
     if first_run:
@@ -65,11 +115,9 @@ def reload_handlers(b2):
     print(colored("Reloaded\n------", 'green'))
 
 # runs a hot-reload dev server
-def run_dev_server(app_path, site_packages):
-
+def run_dev_server(app_path, site_packages, auto_compat):
     import signal
     import sys
-
     # shut down thread if one is runnning
     def sigint_handler(signal, frame):
         print(colored("\nStopping server", 'yellow'))
@@ -90,6 +138,10 @@ def run_dev_server(app_path, site_packages):
     else:
         print(colored("Warning: no virtual environment found; running in global environment", 'yellow'))
 
+    if auto_compat:
+        gpu_exists = check_for_gpu()
+    compat_warning_raised = False # for a one-time warning
+
     # imports and classes needed for hot reload serving
     run_cell(cells.prepare_env)
 
@@ -98,6 +150,15 @@ def run_dev_server(app_path, site_packages):
     first_run = True
     while True:
         b1, b2 = split_file(app_path)
+        
+        if auto_compat and not gpu_exists:
+            b1, changed_b1 = strip_cuda_calls(b1)
+            b2, changed_b2 = strip_cuda_calls(b2)
+            if (changed_b1 or changed_b2) and not compat_warning_raised:
+                print(colored("Auto-compat warning: GPU calls have been replaced with CPU calls", 'yellow'))
+                compat_warning_raised = True
+                
+        
         if first_run:
             start_all(b1, b2, first_run)
             first_run = False
