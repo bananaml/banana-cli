@@ -48,8 +48,10 @@ The handler() function is ran on every change to handler(), without needing to w
 4. Try changing the handler, see what happens!
 5. Try changing the init, see what happens!
 
+## Experimental features:
+- `banana dev --auto-compat=True` to make your GPU code compatible with a CPU machine, by ignoring to("cuda") calls
+
 ## Future Development:
-- Rewrite boilerplate and dev server to run [Potassium](https://github.com/bananaml/potassium) rather than the current demo code
 - Lock in a stable interface
 - Add the following commands
   - `banana build` -> verify production build
