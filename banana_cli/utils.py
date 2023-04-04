@@ -25,7 +25,9 @@ def download_boilerplate(target_dir):
 
 def add_git(target_dir):
     r = git.Repo.init(target_dir)
-    r.index.add(os.listdir(target_dir))
+    to_commit = os.listdir(target_dir)
+    to_commit.remove(".git")
+    r.index.add(to_commit)
     r.index.commit("initial commit")
 
 # Get the relative path to whatever directory the user specified
