@@ -4,7 +4,7 @@ import os
 
 # local imports
 from .cmd_dev import run_dev_server
-from .utils import get_target_dir, get_app_path, get_site_packages, download_boilerplate, create_venv, install_venv
+from .utils import get_target_dir, get_app_path, get_site_packages, download_boilerplate, add_git, create_venv, install_venv
 
 @click.group()
 def cli():
@@ -14,7 +14,8 @@ def cli():
 @click.argument('path', type=click.Path(exists=False, dir_okay=True, file_okay=False), nargs=-1)
 @click.option('--no-venv', is_flag=True, required=False, help="Disable automatic use of a virtual environment")
 @click.option('--no-install', is_flag=True, required=False, help="Disable automatic install of requirements.txt")
-def init(path, no_venv, no_install):
+@click.option('--no-git', is_flag=True, required=False, help="Disable automatic creation of a git repo")
+def init(path, no_venv, no_install, no_git):
     click.echo('⏰ Downloading boilerplate...')
     target_dir = get_target_dir(path)
     if target_dir == ".":
@@ -22,6 +23,8 @@ def init(path, no_venv, no_install):
         if len(os.listdir(target_dir)) > 0:
             click.confirm("This is not an empty directory, and the install may overwrite existing files.\nDo you want to proceed?", abort=True)
     download_boilerplate(target_dir)
+    if not no_git:
+        add_git(target_dir)
     if not no_venv:
         click.echo('🌎 Creating virtual environment...')
         venv_path = os.path.join(target_dir, "venv")

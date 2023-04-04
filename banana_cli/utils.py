@@ -4,13 +4,13 @@ import shutil
 import subprocess
 import sys
 import click
+import git
 
 # Uses git to clone the potassium boilerplate from /boilerplate/potassium in this git repo
 def download_boilerplate(target_dir):
-    from git import Repo
     # git clone to tmp dir
     temp_dir = os.path.join(target_dir, "tmp")
-    Repo.clone_from("https://github.com/bananaml/banana-cli.git", temp_dir)
+    git.Repo.clone_from("https://github.com/bananaml/banana-cli.git", temp_dir)
     
     # move boilerplate to current dir
     boilerplate_path = os.path.join(temp_dir, "boilerplate/potassium")
@@ -22,6 +22,11 @@ def download_boilerplate(target_dir):
     
     # remove temp dir
     shutil.rmtree(temp_dir)
+
+def add_git(target_dir):
+    r = git.Repo.init(target_dir)
+    r.index.add(os.listdir(target_dir))
+    r.index.commit("initial commit")
 
 # Get the relative path to whatever directory the user specified
 def get_target_dir(dir):
