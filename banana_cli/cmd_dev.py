@@ -95,7 +95,12 @@ def start_all(b1, b2, first_run = False):
     run_cell(b2)
     # run init
     print(colored("Running init()", 'yellow'))
-    run_cell(cells.run_init)
+    
+    try:
+        run_cell(cells.run_init)
+    except Exception as e:
+        run_cell("app.init_func()")
+
     # start server
     run_cell(cells.start_server)
     print(colored("Serving on http://localhost:8000\n------", 'green'))
