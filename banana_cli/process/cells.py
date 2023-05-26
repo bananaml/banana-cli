@@ -17,7 +17,7 @@ class ServerThread(threading.Thread):
         self.server.shutdown()
 '''
 
-run_init = "app.init_func()"
+run_init = "app._init_func()"
 
 start_server = '''
 flask_app = app._create_flask_app()
