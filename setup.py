@@ -1,18 +1,21 @@
 from distutils.core import setup
+import json
 import setuptools
 from pathlib import Path
 
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
+info = open('info.json')
+data = json.loads(info.read())
 
 setup(
-    name='banana_cli',
+    name=data['name'],
     packages=['banana_cli', 'banana_cli.process'],
     py_modules=["cli"],
-    version='0.0.15',
-    license='Apache License 2.0',
+    version=data['version'],
+    license=data['license'],
     # Give a short description about your library
-    description='The Banana CLI helps you build Potassium apps',
+    description=data['description'],
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Erik Dunteman',

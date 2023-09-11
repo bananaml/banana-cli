@@ -1,10 +1,14 @@
 # click is our CLI library
 import click
+import json
 import os
 
 # local imports
 from .cmd_dev import run_dev_server
 from .utils import get_target_dir, get_app_path, get_site_packages, download_boilerplate, add_git, create_venv, install_venv
+
+info = open('info.json')
+data = json.loads(info.read())
 
 @click.group()
 def cli():
@@ -61,9 +65,15 @@ def dev(venv, auto_compat, entrypoint):
     site_packages = get_site_packages(app_path, venv_name = venv)
     run_dev_server(app_path, site_packages, auto_compat)
 
+@click.command()
+@click.option(help="Version of Banana Installed")
+def version(data):
+    click.echo(f" \n🍌 Banana version:{data['version']}")
+
 cli.add_command(init)
 cli.add_command(install)
 cli.add_command(dev)
+cli.add_command(version)
 
 if __name__ == "__main__":
     cli()

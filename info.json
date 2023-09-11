@@ -1,0 +1,6 @@
+{
+    "name"  : "banana_cli",
+    "version" : "0.0.15",
+    "license" : "Apache License 2.0",
+    "description" : "The Banana CLI helps you build Potassium apps"
+}
