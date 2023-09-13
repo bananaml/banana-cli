@@ -1,6 +1,6 @@
 # This is a potassium-standard dockerfile, compatible with Banana
+# Currently we only support python3.8 and the base image defined below at the moment. If you need a different base image or python version please contact https://banana.dev/support
 
-# Don't change this. Currently we only support this specific base image.
 FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
 
 WORKDIR /
@@ -8,7 +8,7 @@ WORKDIR /
 # Install git
 RUN apt-get update && apt-get install -y git
 
-# Install python packages
+# Install python packages.
 RUN pip3 install --upgrade pip
 ADD requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
