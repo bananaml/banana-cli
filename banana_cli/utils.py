@@ -5,6 +5,7 @@ import subprocess
 import sys
 import click
 import git
+import pkg_resources
 
 # Uses git to clone the potassium boilerplate from /boilerplate/potassium in this git repo
 def download_boilerplate(target_dir):
@@ -90,4 +91,11 @@ def create_venv(venv_path):
 # install requirements.txt into venv
 def install_venv(req_path, venv_path):
     python_interpreter = os.path.join(venv_path, "bin", "python3")
-    subprocess.check_call([python_interpreter, "-m", "pip", "install", "-r", req_path])
+    result = subprocess.run([python_interpreter, "-m", "pip", "install", "-r", req_path], capture_output=True, text=True)
+    return result.stderr
+
+def get_package_version(package_name):
+    try:
+        return pkg_resources.get_distribution(package_name).version
+    except pkg_resources.DistributionNotFound:
+        return None
