@@ -78,10 +78,15 @@ def init(path, no_venv, no_install, no_git):
 
         click.echo('\n\n🍌 Project ready to go (hurrah!)')
         click.echo('\n\n🔥 To run a dev server locally:\n')
+        
         if target_dir != ".":
             click.echo(f'cd {target_dir}')
+        
         if no_install:
             click.echo(f'banana install')
+        else:
+            click.echo(f'source venv/bin/activate')
+        
         click.echo('python3 app.py')
 
         click.echo('\n\n🚀 To call the model:\n')
