@@ -89,7 +89,7 @@ def init(path, no_venv, no_install, no_git):
         
         click.echo('python3 app.py')
 
-        click.echo('\n\n🚀 To call the model:\n')
+        click.echo('\n\n🚀 To call the project:\n')
         click.echo('python3 example.py\n\n')
 
 @click.command()
@@ -120,7 +120,7 @@ def install(venv):
 @click.command()
 def deploy():
     with yaspin(__spinner) as sp:
-        sp.text = 'Deploying model...'
+        sp.text = 'Deploying project...'
 
         # download to rickroll.mp4
         url = "https://bananaml-model-files.s3.us-west-1.amazonaws.com/rickroll.mp4"
