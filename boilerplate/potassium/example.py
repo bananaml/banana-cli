@@ -12,10 +12,11 @@ my_model = Client(
     url="http://localhost:8000", 
 
     # Found in the model page in the dashboard.
-    api_key="YOUR_API_KEY",
+    api_key="YOUR_API_KEY"
 
-    # Found in the model page in the dashboard.
-    model_key="YOUR_MODEL_KEY", 
+    # If your python client is < 6.0.0, you will need 
+    # to also include a "model_key" parameter, which may be left empty:
+    # model_key=""
 )
 
 # Specify the model's input JSON. Below is an example 
