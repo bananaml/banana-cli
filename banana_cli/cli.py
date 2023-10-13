@@ -194,12 +194,18 @@ def deploy():
                         teams = global_config.get("auth", {})
                         # team keys to array
                         keys = list(teams.keys())
-                        for idx, team_id in enumerate(keys):
-                            click.echo(f"{str(idx+1)}: {teams.get(team_id).get('teamName', team_id)}")
 
-                        # Add team id to the folder's .banana/config.json
-                        selected_team_idx = click.prompt("Which team do you want to use: ", type=int)
-                        selected_team_id = keys[selected_team_idx-1]
+                        if len(keys) > 1:
+                            for idx, team_id in enumerate(keys):
+                                click.echo(f"{str(idx+1)}: {teams.get(team_id).get('teamName', team_id)}")
+
+                            # Add team id to the folder's .banana/config.json
+                            selected_team_idx = click.prompt("Which team do you want to use: ", type=int)
+                            selected_team_id = keys[selected_team_idx-1]
+                        else:
+                            # If there's only one team, just select it.
+                            selected_team_id = keys[0]
+
                         config["teamId"] = selected_team_id
                         api_key = teams.get(selected_team_id).get("apiKey")
                         with open(config_file, 'w') as f:
