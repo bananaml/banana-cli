@@ -151,8 +151,7 @@ def __authenticate():
 
     auth_server, auth_server_port = start_server(auth_callback=auth_callback)
 
-    # app_url = "https://app.banana.dev"
-    app_url = "http://localhost:8080"
+    app_url = "https://app.banana.dev"
     url = f"{app_url}/auth/cli?callback=http://localhost:{auth_server_port}/auth"
     
     click.echo(f"🖥️    Authenticating in the web app at\n\n")
