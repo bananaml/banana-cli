@@ -122,7 +122,7 @@ def install(venv):
         install_venv("requirements.txt", venv)
 
 @click.command()
-def authenticate():
+def auth():
     # See comment below when calling __authenticate()
     __authenticate()
 
@@ -151,10 +151,11 @@ def __authenticate():
 
     auth_server, auth_server_port = start_server(auth_callback=auth_callback)
 
-    app_url = "https://app.banana.dev"
+    # app_url = "https://app.banana.dev"
+    app_url = "http://localhost:8080"
     url = f"{app_url}/auth/cli?callback=http://localhost:{auth_server_port}/auth"
     
-    click.echo(f"🖥️   Authenticating in the web app at\n\n")
+    click.echo(f"🖥️    Authenticating in the web app at\n\n")
 
     with yaspin(__spinner) as sp:
         sp.text = 'Waiting for token...'
@@ -355,7 +356,7 @@ def stage():
 
 cli.add_command(init)
 cli.add_command(install)
-cli.add_command(authenticate)
+cli.add_command(auth)
 cli.add_command(deploy)
 
 if __name__ == "__main__":
