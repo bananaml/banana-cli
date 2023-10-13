@@ -237,12 +237,11 @@ def deploy():
 
         with open(config_file) as f:
             str_contents = f.read()
-            print(f"str_contents: {str_contents}")
             if len(str_contents.strip()) == 0:
                 config = {}
             else:
                 try:
-                    config = json.load(f)
+                    config = json.loads(str_contents)
                 except:
                     config = None
 
