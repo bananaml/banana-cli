@@ -154,7 +154,7 @@ def __authenticate():
     app_url = "https://app.banana.dev"
     url = f"{app_url}/auth/cli?callback=http://localhost:{auth_server_port}/auth"
     
-    click.echo(f"🖥️    Authenticating in the web app at\n\n")
+    click.echo(f"🖥️    Authenticating in the web app\n\n")
 
     with yaspin(__spinner) as sp:
         sp.text = 'Waiting for token...'
