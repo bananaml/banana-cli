@@ -80,12 +80,13 @@ def init(path, no_venv, no_install, no_git):
                         
                     print(HTML(u'✅   <yay-msg>Python packages installed</yay-msg>'), style=style)
 
-        click.echo('\n\n🍌 Project ready to go (hurrah!)')
-        click.echo('\n\n🔥 To run a dev server locally:\n')
-        
+        click.echo('\n🍌 Project ready to go (hurrah!)')
+
         if target_dir != ".":
+            click.echo('\n📀 Navigate into the project:\n')
             click.echo(f'cd {target_dir}')
-        
+
+        click.echo('\n\n🔥 To run a dev server locally:\n')
         if no_install:
             click.echo(f'banana install')
         else:
@@ -95,7 +96,10 @@ def init(path, no_venv, no_install, no_git):
 
         click.echo('\n\n🚀 To call the project:\n')
         click.echo('pip3 install banana-dev')
-        click.echo('python3 example.py\n\n')
+        click.echo('python3 example.py')
+
+        click.echo('\n\n⛅️ To deploy the project:\n')
+        click.echo('banana deploy\n')
 
 @click.command()
 @click.option('--venv', default="venv", required=False, type=str, help="The path of the virtual environment to install into. Defaults to venv.")
@@ -155,7 +159,7 @@ def __authenticate():
     app_url = "https://app.banana.dev"
     url = f"{app_url}/auth/cli?callback=http://localhost:{auth_server_port}/auth"
     
-    click.echo(f"🖥️    Authenticating in the web app\n\n")
+    click.echo(f"🖥️    Authenticating in the web app")
 
     with yaspin(__spinner) as sp:
         sp.text = 'Waiting for token...'
@@ -346,7 +350,7 @@ def deploy():
 
         sp.text = ""
 
-    click.echo("\n\n⏳ To view build logs and deployment progress, go to:")
+    click.echo("\n⏳ To view build logs and deployment progress, go to:")
     click.echo(f"\n🔗 https://app.banana.dev/project/{config.get('projectId')}\n")  
 
 
