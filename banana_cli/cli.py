@@ -94,6 +94,7 @@ def init(path, no_venv, no_install, no_git):
         click.echo('python3 app.py')
 
         click.echo('\n\n🚀 To call the project:\n')
+        click.echo('pip3 install banana-dev')
         click.echo('python3 example.py\n\n')
 
 @click.command()
@@ -325,6 +326,7 @@ def deploy():
             return response
         
         response = upload_to_presigned_url(upload_url, filename)
+        os.remove(filename)
 
         # todo
         if response.status_code != 200:
@@ -342,26 +344,32 @@ def deploy():
         with sp.hidden():
             print(HTML(u'✅   <yay-msg>Build triggered</yay-msg>'), style=style)
 
-        click.echo("\n\n⏳ To view build logs and deployment progress, go to:")
-        click.echo(f"\n\n🔗 https://app.banana.dev/project/{config.get('projectId')}\n")  
+        sp.text = ""
+
+    click.echo("\n\n⏳ To view build logs and deployment progress, go to:")
+    click.echo(f"\n🔗 https://app.banana.dev/project/{config.get('projectId')}\n")  
 
 
 @click.command()
 def stage():
+    """Experimental feature: staging deploy. Not yet implemented. But give it a try anyway."""
+    
     with yaspin(__spinner) as sp:
-        sp.text = 'Staging project...'
+        sp.text = 'Creating staging deploy...'
+        time.sleep(3)
 
-        # download to rickroll.mp4
-        url = "https://bananaml-model-files.s3.us-west-1.amazonaws.com/rickroll.mp4"
-        r = requests.get(url, allow_redirects=True)
-        open('rickroll.mp4', 'wb').write(r.content)
+    # download to rickroll.mp4
+    url = "https://bananaml-model-files.s3.us-west-1.amazonaws.com/rickroll.mp4"
+    r = requests.get(url, allow_redirects=True)
+    open('rickroll.mp4', 'wb').write(r.content)
 
-        roll("rickroll.mp4")
+    roll("rickroll.mp4")
 
 cli.add_command(init)
 cli.add_command(install)
 cli.add_command(auth)
 cli.add_command(deploy)
+cli.add_command(stage)
 
 if __name__ == "__main__":
     cli()
