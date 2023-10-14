@@ -55,5 +55,5 @@ The handler() function is ran on every change to handler(), without needing to w
 ## Future Development:
 - Lock in a stable interface
 - Add the following commands
-  - `banana stage` -> run a temporary deployment to Banana's cluster for on-GPU testin
+  - `banana stage` -> run a temporary deployment to Banana's cluster for on-GPU testing
   - `banana test` -> unit test against local test cases

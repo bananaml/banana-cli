@@ -215,8 +215,6 @@ def deploy():
                         api_key = teams.get(selected_team_id).get("apiKey")
                         with open(config_file, 'w') as f:
                             json.dump(config, f, indent=4)
-
-                        click.echo("\n\n")
             else:
                 # needs to call an internal function rather than a click command?
                 __authenticate()
