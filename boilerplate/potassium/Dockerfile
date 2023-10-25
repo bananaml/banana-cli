@@ -1,6 +1,5 @@
-# This is a potassium-standard dockerfile, compatible with Banana
+# This is an example dockerfile for a potassium project
 
-# Don't change this. Currently we only support this specific base image.
 FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
 
 WORKDIR /
