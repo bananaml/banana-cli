@@ -5,9 +5,20 @@ The goal of the Banana CLI is to bring an npm-like experience to ML development 
 This version includes:
 - `banana init` to create a project with boilerplate
 - `banana install` to install packages from the requirements.txt
-- `banana dev` to run a dev server with hot-reload (beta)
+- `banana --version` to show the current version
+- `banana deploy` to easily deploy the local folder to Banana.dev without using GitHub
 
 [Here's a demo video](https://www.loom.com/share/86d4e7b0801549b9ab2f7a1acce772aa)
+
+
+## Installing the CLI locally
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install -e ./
+banana --version
+```
 
 ---
 This is a v0 release using SemVer; it is not stable and the interface can break at any time.
@@ -15,32 +26,20 @@ This is a v0 release using SemVer; it is not stable and the interface can break 
 
 ## To use it
 
-1. Install the CLI with pip
-```bash
-pip3 install banana-cli
-```
-
-2. Create a new project directory with 
+1. Create a new project directory with 
 ```bash
 banana init my-app
 cd my-app
 ```
-3. Start the dev server
+2. Start the dev server
 ```bash
 python3 app.py
 ```
 
-4. Call your API (from a separate terminal)
+3. Call your API (from a separate terminal)
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{"prompt": "Hello I am a [MASK] model."}' http://localhost:8000/
 ``` 
-
-## Experimental: Hot-Reload Dev Server
-
-You may try the interractive dev server, in beta, with 
-```bash
-banana dev
-```
 
 The interactive dev server works like a react, next, or nodemon server: it selectively hot reloads components when you save changes to different parts of your `app.py` file.
 
@@ -53,14 +52,8 @@ The handler() function is ran on every change to handler(), without needing to w
 4. Try changing the handler, see what happens!
 5. Try changing the init, see what happens!
 
-## Experimental: Auto-compat for non-GPU machines:
-- `banana dev --auto-compat=True` to make your GPU code compatible with a CPU machine, by ignoring to("cuda") calls
-
 ## Future Development:
 - Lock in a stable interface
 - Add the following commands
-  - `banana build` -> verify production build
+  - `banana stage` -> run a temporary deployment to Banana's cluster for on-GPU testing
   - `banana test` -> unit test against local test cases
-  - `banana deploy` -> manually deploy from CLI
-  - `banana deploy --canary --ttl=10` -> run a temporary deployment to Banana's cluster for on-GPU testin
-- Port to Rust. [Why Rust?](https://giphy.com/gifs/aFbTasXn1GINgiEbzr)

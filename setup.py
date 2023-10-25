@@ -1,5 +1,4 @@
 from distutils.core import setup
-import setuptools
 from pathlib import Path
 
 this_directory = Path(__file__).parent
@@ -9,7 +8,8 @@ setup(
     name='banana_cli',
     packages=['banana_cli', 'banana_cli.process'],
     py_modules=["cli"],
-    version='0.0.15',
+    python_requires='>=3.7',
+    version='0.1.0',
     license='Apache License 2.0',
     # Give a short description about your library
     description='The Banana CLI helps you build Potassium apps',
@@ -25,6 +25,12 @@ setup(
         "gitpython",
         "termcolor",
         "requests",
+        "yaspin",
+        "prompt_toolkit",
+        "opencv-python",
+        "gitignore_parser",
+        "fastapi",
+        "uvicorn[standard]"
     ],
     entry_points={
         'console_scripts': [
@@ -39,5 +45,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
 )
