@@ -1,5 +1,4 @@
-# This is a potassium-standard dockerfile, compatible with Banana
-# Currently we only support python3.8 and the base image defined below at the moment. If you need a different base image or python version please contact https://banana.dev/support
+# This is an example dockerfile for a potassium project
 
 FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
 
