@@ -2,7 +2,7 @@
 This is a Potassium HTTP server, created with `banana init` CLI
 
 ### Testing
-Start a local dev server with `banana dev`
+Start a local dev server with `python3 app.py`
 
 ### Deployment
 1. Create empty repo on [Github](https://github.com)
