@@ -9,7 +9,7 @@ setup(
     packages=['banana_cli', 'banana_cli.process'],
     py_modules=["cli"],
     python_requires='>=3.7',
-    version='0.1.0',
+    version='0.1.1',
     license='Apache License 2.0',
     # Give a short description about your library
     description='The Banana CLI helps you build Potassium apps',
@@ -30,7 +30,10 @@ setup(
         "opencv-python",
         "gitignore_parser",
         "fastapi",
-        "uvicorn[standard]"
+        "uvicorn[standard]",
+        "websocket-client",
+        "wsaccel",
+        "rel"
     ],
     entry_points={
         'console_scripts': [
