@@ -4,6 +4,13 @@ import requests
 import json
 import time
 
+# ws-related imports
+from dateutil import parser
+import datetime
+import unicodedata
+import websocket
+import rel
+
 # local imports
 from .cmd_dev import run_dev_server
 from .utils import get_target_dir, get_app_path, get_site_packages, download_boilerplate, add_git, create_venv, install_venv
@@ -26,7 +33,32 @@ style = Style.from_dict({
     'err-msg': '#ff0000 bold',
 })
 
+__tz = datetime.datetime.now().astimezone().tzinfo
+
 __spinner = Spinner(["🍌  ", " 🍌 ", "  🍌", " 🍌 "], 200)
+
+__build_logs_ws_url = "wss://build.banana.dev/ws/logs"
+
+def remove_control_characters(s):
+    return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
+
+def on_message(ws, message):
+    try:
+        j = json.loads(remove_control_characters(message))
+        d = parser.parse(j.get("t"))
+        click.echo(f"{d.astimezone(__tz).strftime('%H:%M:%S')} // {j.get('m')}")
+    except Exception as e:
+        print(HTML(u'❌   <err-msg>"Error parsing message: "</err-msg>: ' + message), style=style)
+
+def on_error(ws, error):
+    click.echo(error)
+
+def on_close(ws, close_status_code, close_msg):
+    rel.abort()
+
+def on_open(ws):
+    pass
+    # print("Opened connection")
 
 @click.group()
 @click.version_option()
@@ -348,8 +380,23 @@ def deploy():
 
         sp.text = ""
 
-    click.echo("\n⏳ To view build logs and deployment progress, go to:")
-    click.echo(f"\n🔗 https://app.banana.dev/project/{config.get('projectId')}\n")  
+    click.echo("\n🍌 Your project is available at:")
+    click.echo(f"\n🔗 https://app.banana.dev/project/{config.get('projectId')}\n")
+
+    if build_project_response is not None and build_project_response.get("id") is not None:
+        ws = websocket.WebSocketApp(
+            f"{__build_logs_ws_url}/{build_project_response.get('id')}",
+            header={
+                "X-Banana-API-Key": api_key,
+            },
+            on_open=on_open,
+            on_message=on_message,
+            on_error=on_error,
+            on_close=on_close
+        )
+        ws.run_forever(dispatcher=rel, reconnect=5)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
+        rel.signal(2, rel.abort)  # Keyboard Interrupt
+        rel.dispatch()
 
 
 @click.command()
