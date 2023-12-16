@@ -318,14 +318,6 @@ def deploy():
         # todo: the model exists and re-deploying case
 
         sp.text = 'Deploying project...'
-        
-        upload_response = upload_project(api_key, config.get("projectId"))
-        if upload_response is None:
-            with sp.hidden():
-                print(HTML(u'❌   <err-msg>Error getting upload URL for project</err-msg>'), style=style)
-                exit(1)
-        upload_url = upload_response.get("uploadUrl")
-        upload_key = upload_response.get("key")
 
         import tarfile
         from gitignore_parser import parse_gitignore
@@ -352,6 +344,14 @@ def deploy():
             print(HTML(u'✅   <yay-msg>Archived</yay-msg>'), style=style)
 
         sp.text = 'Uploading...'
+
+        upload_response = upload_project(api_key, config.get("projectId"))
+        if upload_response is None:
+            with sp.hidden():
+                print(HTML(u'❌   <err-msg>Error getting upload URL for project</err-msg>'), style=style)
+                exit(1)
+        upload_url = upload_response.get("uploadUrl")
+        upload_key = upload_response.get("key")
 
         def upload_to_presigned_url(presigned_url, file_path):
             with open(file_path, 'rb') as f:
