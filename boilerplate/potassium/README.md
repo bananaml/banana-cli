@@ -10,5 +10,5 @@ Start a local dev server with `python3 app.py`
 ```
 git remote add origin https://github.com/{username}/{repo-name}.git
 ```
-3. [Log into Banana](https://app.banana.dev/onboard)
+3. [Log into Banana](https://app.banana.dev/)
 4. Select this repo to build and deploy!
